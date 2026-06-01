@@ -5,8 +5,6 @@ from datetime import datetime
 from pathlib import Path
 
 
-_REQUIRED_AWS_VARS = ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_DEFAULT_REGION"]
-
 _PRICING = {
     "claude-sonnet-4": {"input": 3.00, "output": 15.00, "cached_input": 0.30},
     "claude-haiku-4":  {"input": 0.80, "output": 4.00,  "cached_input": 0.08},
@@ -15,9 +13,11 @@ _PRICING = {
 
 
 def _validate_aws_env():
-    missing = [v for v in _REQUIRED_AWS_VARS if not os.environ.get(v)]
+    if os.environ.get("AWS_PROFILE"):
+        return
+    missing = [v for v in ["AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_DEFAULT_REGION"] if not os.environ.get(v)]
     if missing:
-        print(f"Error: missing required environment variable(s): {', '.join(missing)}", file=sys.stderr)
+        print(f"Error: set AWS_PROFILE or provide {', '.join(missing)}", file=sys.stderr)
         sys.exit(1)
 
 
