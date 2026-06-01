@@ -42,3 +42,6 @@ Thumbs.db
 # CrewAI
 *.log
 output/
+
+# Google OAuth2 token
+token.json
